@@ -1,6 +1,10 @@
 class DetoxeBotInternal:
 	def __init__(self):
-		return
+		self.test = 1
 
-	def process(self, bot_api):
-		print("Internal Hello")
+	def execute(self, bot_api):
+		self.bot = bot_api.get()
+
+		@self.bot.message_handler(commands=['start', 'help'])
+		def start_message(message):
+			self.bot.send_message(message.chat.id, 'Хуле надо?')

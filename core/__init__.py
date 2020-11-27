@@ -9,5 +9,5 @@ class BotHandler:
 		plugin.call_plugins(self.bot_api)
 
 	def run(self):
-		self.bot_api.loop_me()
+		self.bot_api.loop()
 
