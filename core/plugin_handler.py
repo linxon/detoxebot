@@ -1,16 +1,16 @@
 import importlib
-from core.internal import DetoxeBotInternal
+from core.internal import DetoxeBotInternal as internal_commands
 
 class PluginHandler:
 	def __init__(self, *, plugins: list=list()):
-		self.internal_modules = [ DetoxeBotInternal() ]
+		self.internal_modules = [ internal_commands() ]
 		self.external_modules = plugins
 
 	def load_plugin(self, name):
-		try:
+		# try:
 			return importlib.import_module(name)
-		except(ModuleNotFoundError or AttributeError):
-			return None
+		# except(ModuleNotFoundError or AttributeError):
+		# 	return None
 
 	def call_plugins(self, bot_api):
 		for module in self.internal_modules:

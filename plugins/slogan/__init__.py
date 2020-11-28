@@ -1,18 +1,18 @@
 import random, os
 
-TRIGGERED_AT=".*(совет|sovet|advice).*"
+TRIGGERED_AT=".*(слоган|slogan).*"
 PLUGIN_DIR=os.path.dirname(__file__) + '/data/'
-DICT_FILE=PLUGIN_DIR + 'sovet.txt'
+DICT_FILE=PLUGIN_DIR + 'slogan.txt'
 
-class Sovet4ik:
-	def get_rand_line(self, file):
+class Slogan:
+	def get_rand_line(self, file, username):
 		try:
 			lines = open(file).read().splitlines()
-			return random.choice(lines)
+			return (random.choice(lines)) % username
 		except IOError:
 			print("File '" + file + "' not accessible!")
 
-	def remember_it(self, file, max_count, text):
+	def remember_it(self, file, max_count, text, username):
 		with open(file, 'a') as f:
 			f.write(text + '\n')
 
@@ -31,14 +31,16 @@ class Sovet4ik:
 
 def execute(bot_api):
 	bot = bot_api.get()
-	sovet4ik = Sovet4ik()
+	slogan = Slogan()
 
 	if not os.path.exists(PLUGIN_DIR):
 		os.makedirs(PLUGIN_DIR)
 
 	@bot.message_handler(regexp=TRIGGERED_AT)
-	def send_advice(message):
-		adv = sovet4ik.remember_it(PLUGIN_DIR + 'last_msg.txt', 
-			20, sovet4ik.get_rand_line(DICT_FILE))
+	def send_slogan(message):
+		username = message.from_user.first_name
 
-		bot.reply_to(message, adv)
+		slog = slogan.remember_it(PLUGIN_DIR + 'last_msg.txt', 
+			20, slogan.get_rand_line(DICT_FILE, username), username)
+
+		bot.send_message(message.chat.id, slog)
