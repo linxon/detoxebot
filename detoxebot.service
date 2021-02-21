@@ -1,0 +1,16 @@
+[Unit]
+Description=A simple telegram bot
+After=network.target
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=30
+TimeoutStartSec=5m
+#User=myuser
+#Group=mygrp
+ExecStart=/usr/bin/podman start -a detoxebot
+ExecStop=/usr/bin/podman stop -t 10 detoxebot
+
+[Install]
+WantedBy=multi-user.target
