@@ -1,30 +1,32 @@
-import telebot
+import telebot as tb
 import logging
 
 class DetoxeBot:
-	def __init__(self, token, interval, timeout, debug_level = 0):
-		self.interval = interval
-		self.timeout = timeout
-		self.set_debug(debug_level)
+	def __init__(self, token, logfile, debug_level):
+		self.logfile = logfile
+		self.debug_level = debug_level
 
-		self.bot = telebot.TeleBot(token, parse_mode=None)
+		self.bot = tb.TeleBot(token, parse_mode=None)
 
-	def set_debug(self, level = 0):
-		if level > 0:
-			logger = telebot.logger
-			telebot.logger.setLevel(logging.DEBUG)
+		self.log = tb.logger
+		self.log.setLevel(self.debug_level)
 
-		self.debug_level = level
+		log_fh = logging.FileHandler(self.logfile, "w")
+		log_fh.setFormatter(logging.Formatter("%(asctime)s - %(message)s"))
+		self.log.addHandler(log_fh)
 
-	def set_proxy(self, params):
-		telebot.apihelper.proxy = params
+	def _loop(self, interval, timeout):
+		self.bot.polling(none_stop=True, interval=interval, timeout=timeout)
+
+	def _set_proxy(self, params):
+		tb.apihelper.proxy = params
 
 	def get_updates(self, offset, limit, timeout):
 		return self.bot.get_updates(offset, limit, timeout)
 
+	def logger(self):
+		return self.log
+
 	def get(self):
 		return self.bot
-
-	def loop(self):
-		self.bot.polling(none_stop=True, interval=self.interval, timeout=self.timeout)
 

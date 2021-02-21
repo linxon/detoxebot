@@ -1,6 +1,6 @@
 import random, os
 
-TRIGGERED_AT=".*(слоган|slogan).*"
+TRIGGERED_AT=".*(!слоган|!slogan).*"
 PLUGIN_DIR=os.path.dirname(__file__) + '/data/'
 DICT_FILE=PLUGIN_DIR + 'slogan.txt'
 
